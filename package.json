@@ -1,0 +1,26 @@
+{
+  "name": "wiggle",
+  "version": "0.0.1",
+  "description": "Media query change listener",
+  "main": "wiggle.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snovakovic/wiggle.git"
+  },
+  "keywords": [
+    "media-query",
+    "MediaQuery",
+    "matchMedia",
+    "responsive",
+    "resize"
+  ],
+  "author": "stefan.novakovich@gmail.com",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/snovakovic/wiggle/issues"
+  },
+  "homepage": "https://github.com/snovakovic/wiggle#readme",
+  "devDependencies": {
+    "eslint": "^3.15.0"
+  }
+}
