@@ -63,3 +63,10 @@ Each instance of wiggle have it's own resize listener. In most cases we would ne
   }
 
 ```
+
+
+### Supported browsers
+
+Wiggle use [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) to detect layout changes.
+If you need to support browser that does not support matchMedia (IE9 and below) you need to include [matchMedia polyfill](https://github.com/paulirish/matchMedia.js) before using this library.
+
