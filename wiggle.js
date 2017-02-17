@@ -18,7 +18,7 @@
   return {
     init: function(settings) {
       settings.resizeDelay = settings.resizeDelay || 25;
-      var screens = settings.screens;
+      var screens = Array.isArray(settings.screens) ? settings.screens : [];
       var doit;
       var activeScreens = [];
       var subscribeType = {
@@ -28,6 +28,7 @@
       }
       var subscribers = {};
 
+      updateActiveScreens();
 
       // Populate default subscribers
       Object.getOwnPropertyNames(subscribeType).forEach(function(name) {
@@ -37,29 +38,28 @@
 
       window.addEventListener('resize', function() {
         clearTimeout(doit);
-        doit = setTimeout(updateActiveScreens.bind(null, true), settings.resizeDelay);
+        doit = setTimeout(updateActiveScreens, settings.resizeDelay);
       }, true);
 
 
-      function updateActiveScreens(notify) {
-        for (var i = 0; i < screens.length; i++) {
-          var screen = screens[i];
+      function updateActiveScreens() {
+        screens.forEach(function (screen) {
           var active = isScreenActive(screen);
 
           if (active) {
             if (!activeScreens[screen.name]) {
               activeScreens[screen.name] = screen;
-              notify && notifySubscribers(screen.name, subscribeType.on);
+              notifySubscribers(screen.name, subscribeType.on);
             }
           } else if (activeScreens[screen.name]) {
             delete activeScreens[screen.name];
-            notify && notifySubscribers(screen.name, subscribeType.off);
+            notifySubscribers(screen.name, subscribeType.off);
           }
-        }
+        });
       }
 
       function notifySubscribers(screenName, type) {
-        var screenSubscribers = subscribers[type][screenName];
+        var screenSubscribers = subscribers[type] && subscribers[type][screenName];
         if (screenSubscribers && screenSubscribers.length) {
           screenSubscribers.forEach(function(subscriber) {
             subscriber.execute();
