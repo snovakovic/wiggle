@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.0.2
+    version: 0.0.3
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
@@ -13,7 +13,6 @@
     global.Wiggle = factory()
   }
 }(this, (function() {
-
 
   return {
     init: function(settings) {
@@ -43,19 +42,25 @@
 
 
       function updateActiveScreens() {
-        screens.forEach(function (screen) {
-          var active = isScreenActive(screen);
-
-          if (active) {
-            if (!activeScreens[screen.name]) {
-              activeScreens[screen.name] = screen;
-              notifySubscribers(screen.name, subscribeType.on);
-            }
-          } else if (activeScreens[screen.name]) {
-            delete activeScreens[screen.name];
-            notifySubscribers(screen.name, subscribeType.off);
-          }
+        screens.forEach(function(screen) {
+          isScreenActive(screen)
+            ? activateScreen(screen.name)
+            : deactivateScreen(screen.name);
         });
+      }
+
+      function activateScreen(name) {
+        if (!activeScreens[name]) {
+          activeScreens[name] = screen;
+          notifySubscribers(name, subscribeType.on);
+        }
+      }
+
+      function deactivateScreen(name) {
+        if (activeScreens[name]) {
+          delete activeScreens[name];
+          notifySubscribers(name, subscribeType.off);
+        }
       }
 
       function notifySubscribers(screenName, type) {
