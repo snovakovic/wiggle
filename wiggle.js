@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.0.3
+    version: 0.0.4
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
@@ -27,13 +27,12 @@
       }
       var subscribers = {};
 
-      updateActiveScreens();
-
       // Populate default subscribers
       Object.getOwnPropertyNames(subscribeType).forEach(function(name) {
         subscribers[name] = {};
       });
 
+      updateActiveScreens();
 
       window.addEventListener('resize', function() {
         clearTimeout(doit);
@@ -64,7 +63,7 @@
       }
 
       function notifySubscribers(screenName, type) {
-        var screenSubscribers = subscribers[type] && subscribers[type][screenName];
+        var screenSubscribers = subscribers[type][screenName];
         if (screenSubscribers && screenSubscribers.length) {
           screenSubscribers.forEach(function(subscriber) {
             subscriber.execute();
