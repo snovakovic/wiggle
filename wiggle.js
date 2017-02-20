@@ -1,16 +1,16 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.0.4
+    version: 0.0.5
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
   if (typeof exports === 'object' && typeof module !== 'undefined') {
-    module.exports = factory()
+    module.exports = factory();
   } else if (typeof define === 'function' && define.amd) {
-    define(factory)
+    define(factory);
   } else {
-    global.Wiggle = factory()
+    global.Wiggle = factory();
   }
 }(this, (function() {
 
@@ -20,25 +20,28 @@
       var screens = Array.isArray(settings.screens) ? settings.screens : [];
       var doit;
       var activeScreens = [];
+      var subscribers = {};
       var subscribeType = {
         on: 'on',
         once: 'once',
         off: 'off'
       }
-      var subscribers = {};
 
-      // Populate default subscribers
+      // Initialize application
+
       Object.getOwnPropertyNames(subscribeType).forEach(function(name) {
         subscribers[name] = {};
       });
-
-      updateActiveScreens();
 
       window.addEventListener('resize', function() {
         clearTimeout(doit);
         doit = setTimeout(updateActiveScreens, settings.resizeDelay);
       }, true);
 
+      updateActiveScreens();
+
+
+      // Define private methods
 
       function updateActiveScreens() {
         screens.forEach(function(screen) {
@@ -46,6 +49,16 @@
             ? activateScreen(screen.name)
             : deactivateScreen(screen.name);
         });
+      }
+
+      function isScreenActive(screen) {
+        if (typeof screen === 'string') {
+          screen = getScreen(screen);
+        }
+
+        return Boolean(screen &&
+          (matchMedia('min-width', screen.minWidth, screen.measureUnit)
+            || matchMedia('max-width', screen.maxWidth, screen.measureUnit)));
       }
 
       function activateScreen(name) {
@@ -62,30 +75,25 @@
         }
       }
 
+      function getScreen(name) {
+        for (var i = 0; i < screens.length; i++) {
+          if (name === screens[i].name) {
+            return screens[i];
+          }
+        }
+      }
+
+      function matchMedia(property, width, measureUnit) {
+        measureUnit = measureUnit || 'px';
+        return width ? window.matchMedia('(' + property + ':' + width + measureUnit + ')').matches : false;
+      }
+
       function notifySubscribers(screenName, type) {
         var screenSubscribers = subscribers[type][screenName];
         if (screenSubscribers && screenSubscribers.length) {
           screenSubscribers.forEach(function(subscriber) {
             subscriber.execute();
           });
-        }
-      }
-
-      function isScreenActive(screen) {
-        if (typeof screen === 'string') {
-          screen = getScreen(screen);
-        }
-
-        return Boolean(screen &&
-          ((screen.minWidth && window.matchMedia('(min-width: ' + screen.minWidth + 'px)').matches) ||
-            (screen.maxWidth && window.matchMedia('(max-width: ' + screen.maxWidth + 'px)').matches)));
-      }
-
-      function getScreen(name) {
-        for (var i = 0; i < screens.length; i++) {
-          if (name === screens[i].name) {
-            return screens[i];
-          }
         }
       }
 
@@ -99,6 +107,8 @@
       }
 
 
+      // Export public methods
+
       var public = {};
 
       public.on = function(screenName, callback) {
@@ -111,8 +121,9 @@
       };
 
       public.once = function(screenName, callback) {
-        isScreenActive(screenName) ? callback() :
-          subscribe(screenName, subscribeType.once, callback);
+        isScreenActive(screenName)
+          ? callback()
+          : subscribe(screenName, subscribeType.once, callback);
       };
 
       public.off = function(screenName, callback) {
