@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.1.3
+    version: 0.2.0
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
@@ -55,8 +55,8 @@
       }
 
       return Boolean(screen && (screen.minWidth || screen.maxWidth) &&
-        (!screen.minWidth || matchMedia('min-width', screen.minWidth, screen.measureUnit)) &&
-        (!screen.maxWidth || matchMedia('max-width', screen.maxWidth, screen.measureUnit)));
+        (!screen.minWidth || matchMedia('min-width', screen.minWidth)) &&
+        (!screen.maxWidth || matchMedia('max-width', screen.maxWidth)));
     }
 
     function activateScreen(name) {
@@ -81,9 +81,9 @@
       }
     }
 
-    function matchMedia(property, width, measureUnit) {
-      measureUnit = measureUnit || 'px';
-      return width ? window.matchMedia('(' + property + ':' + width + measureUnit + ')').matches : false;
+    function matchMedia(property, width) {
+      if(typeof width === 'number') { width = width + 'px'; }
+      return width ? window.matchMedia('(' + property + ':' + width + ')').matches : false;
     }
 
     function notifySubscribers(screenName, type) {
