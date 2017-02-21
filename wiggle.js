@@ -39,7 +39,7 @@
     updateActiveScreens();
 
 
-    // Define private methodsisScreenActive
+    // Define private methods
 
     function updateActiveScreens() {
       screens.forEach(function(screen) {
