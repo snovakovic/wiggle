@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.1.2
+    version: 0.1.3
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
@@ -39,7 +39,7 @@
     updateActiveScreens();
 
 
-    // Define private methods
+    // Define private methodsisScreenActive
 
     function updateActiveScreens() {
       screens.forEach(function(screen) {
@@ -54,9 +54,9 @@
         screen = getScreen(screen);
       }
 
-      return Boolean(screen &&
-        (matchMedia('min-width', screen.minWidth, screen.measureUnit)
-          || matchMedia('max-width', screen.maxWidth, screen.measureUnit)));
+      return Boolean(screen && (screen.minWidth || screen.maxWidth) &&
+        (!screen.minWidth || matchMedia('min-width', screen.minWidth, screen.measureUnit)) &&
+        (!screen.maxWidth || matchMedia('max-width', screen.maxWidth, screen.measureUnit)));
     }
 
     function activateScreen(name) {
@@ -143,4 +143,5 @@
       return Instance(settings);
     }
   }
+
 })));

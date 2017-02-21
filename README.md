@@ -1,4 +1,4 @@
-# wiggle v0.1.2
+# wiggle v0.1.3
 
 Watch for media query changes and respond to layout changes.
 
