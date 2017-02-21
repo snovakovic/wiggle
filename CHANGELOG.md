@@ -1,3 +1,8 @@
+## [0.1.1] - 2017-02-21
+### Changed
+- fix off method
+- minor refactoring of public api functions
+
 ## [0.1.0] - 2017-02-20
 
 ### Added

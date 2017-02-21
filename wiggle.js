@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.0.5
+    version: 0.1.1
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
@@ -111,8 +111,8 @@
       var public = {};
 
       public.on = function(screenName, callback) {
-        isScreenActive(screenName) && callback();
-        subscribe(screenName, subscribeType.on, callback);
+        if(isScreenActive(screenName)) { callback(); }
+        public.queueOn(screenName, callback);
       };
 
       public.queueOn = function(screenName, callback) {
@@ -120,8 +120,8 @@
       };
 
       public.off = function(screenName, callback) {
-        !isScreenActive(screenName) && callback();
-        subscribe(screenName, subscribeType.off, callback);
+        if(!isScreenActive(screenName)) { callback(); }
+        public.queueOff(screenName, callback);
       };
 
       public.queueOff = function(screenName, callback) {
