@@ -23,7 +23,6 @@
       var subscribers = {};
       var subscribeType = {
         on: 'on',
-        once: 'once',
         off: 'off'
       }
 
@@ -118,12 +117,6 @@
 
       public.queueOn = function(screenName, callback) {
         subscribe(screenName, subscribeType.on, callback);
-      };
-
-      public.once = function(screenName, callback) {
-        isScreenActive(screenName)
-          ? callback()
-          : subscribe(screenName, subscribeType.once, callback);
       };
 
       public.off = function(screenName, callback) {

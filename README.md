@@ -54,10 +54,6 @@ Each instance of wiggle have it's own resize listener. In most cases we would ne
     console.log("function that will be executed every time screen size stops to be mobile");
   });
 
-  wiggle.once('desktop', function() {
-    console.log("This function will execute only once if current screen size is desktop or first time it change to desktop.");
-  });
-
   if(wiggle.is('desktop')) {
     console.log("current screen size is desktop");
   }
