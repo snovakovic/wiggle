@@ -1,3 +1,7 @@
+## [0.3.0] - 2017-03-07
+### Changed
+- initialize instance with new
+
 ## [0.2.0] - 2017-02-21
 ### Changed
 - minor refactoring of public api functions

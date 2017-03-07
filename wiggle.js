@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.2.0
+    version: 0.3.0
  ***************************************************/
 (function(global, factory) {
   //UMD pattern
@@ -107,40 +107,37 @@
 
     // Export public methods
 
-    var public = {};
-
-    public.on = function(screenName, callback) {
+    this.on = function(screenName, callback) {
       if(isScreenActive(screenName)) { callback(); }
-      public.queueOn(screenName, callback);
+      this.queueOn(screenName, callback);
     };
 
-    public.queueOn = function(screenName, callback) {
+    this.queueOn = function(screenName, callback) {
       subscribe(screenName, subscribeType.on, callback);
     };
 
-    public.off = function(screenName, callback) {
+    this.off = function(screenName, callback) {
       if(!isScreenActive(screenName)) { callback(); }
-      public.queueOff(screenName, callback);
+      this.queueOff(screenName, callback);
     };
 
-    public.queueOff = function(screenName, callback) {
+    this.queueOff = function(screenName, callback) {
       subscribe(screenName, subscribeType.off, callback);
     };
 
-    public.is = function(screenName) {
+    this.is = function(screenName) {
       return Boolean(activeScreens[screenName]);
     };
 
-    public.getActiveScreens = function() {
+    this.getActiveScreens = function() {
       return activeScreens;
     }
 
-    return public;
   }
 
   return {
     init: function(settings) {
-      return Instance(settings);
+      return new Instance(settings);
     }
   }
 
