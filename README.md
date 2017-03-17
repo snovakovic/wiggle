@@ -82,7 +82,7 @@ Other problem was lot of if-s and ugly code to detect when browser is in desktop
 
 For example we will use Vue js and Vuex store plugin but similar approach can be taken with React and Redux. Or Angular.
 
-Basic premises is that we will have components that will need to be displayed only on desktop but on mobile.
+Basic premises is that we will have components that will need to be displayed only on desktop.
 We can easily hide them with media-queries and display none. Problem with hiding them like that is that components will still render and components code will still be executed which is far from ideal.
 
 With wiggle and v-if directive we can easily optimize that by not rendering components that is not used.

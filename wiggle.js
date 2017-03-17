@@ -101,7 +101,7 @@
       });
     }
 
-    // Export api
+    // Export API
 
     this.on = function(screenName, callback) {
       if (isScreenActive(screenName)) { callback(); }
