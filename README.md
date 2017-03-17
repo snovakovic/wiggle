@@ -6,10 +6,10 @@ Hmmm what?
 
 In short if you have responsive page and you want to execute JS code for any reason when page changes layout from desktop to tablet or mobile, or you want to execute code only on desktop or... You get my point. Meet wiggle you might like it.
 
-It is specifically designed to match your CSS media query breakpoint with JS code subscribers.
+It is specifically designed to match your CSS media query breakpoints with JS code subscribers.
 
-Library was born when I had to use jQuery to swap position of multiple elements based on if screen size is in desktop or mobile view.
-First problem was that $(window).width() < 768px does not match media query 768px inside your css code.
+Library was born when I had to use jQuery to swap position of multiple elements based on if screen size matches desktop or mobile design.
+First problem was that $(window).width() < 768px does not match css media query 768px.
 Other problem was lot of if-s and ugly code to detect when browser is in desktop or tablet or mobile view.
 
 
@@ -22,10 +22,10 @@ Other problem was lot of if-s and ugly code to detect when browser is in desktop
   **/
   var wiggle = Wiggle.init([{
       minWidth: 992, // Default unit is px. Same as writing '992px'
-      name: 'desktop' // Unique name by witch we listen to layout changes. Can be any string but have to be unique for each screen.
+      name: 'desktop' // Unique name based on which we can create subscriptions. Name can be any string that is valid JS object property name and it have to be unique for each screen.
     }, {
       minWidth: '768',
-      maxWidth: '62em', // We can combine different measurements units. That does not mean we should!
+      maxWidth: '62em', // We can combine different measurements units but it does not mean we should!
       name: 'tablet'
     }, {
       maxWidth: 767,
@@ -33,7 +33,8 @@ Other problem was lot of if-s and ugly code to detect when browser is in desktop
     }]);
 
   /**
-  * Add subscriber for 'mobile' screen. It will execute if current screen size is mobile and every time we switch from some other screens size to mobile.
+  * Add subscriber for 'mobile' screen.
+  * It will execute if current screen size is mobile and every time we switch from some other screens size to mobile.
   * Instead of mobile we can subscribe to any other defined screen size like 'desktop' or 'tablet'
   **/
   wiggle.on('mobile', function() {
@@ -45,7 +46,7 @@ Other problem was lot of if-s and ugly code to detect when browser is in desktop
   });
 
   /**
-  * queOn behaves same as on with difference that it won't execute when declared only when screen size changes from some other screen size to defined screen size.
+  * queueOn behaves same as on with difference that it won't execute when declared only when screen size changes from some other screen size to defined screen size.
   * in 99% casess on listener is right one to use.
   **/
   wiggle.queueOn('mobile', function() {
@@ -53,16 +54,20 @@ Other problem was lot of if-s and ugly code to detect when browser is in desktop
   });
 
   wiggle.off('mobile', function() {
-    console.log("function that will be executed if screen size is not mobile and every time screen size stops to be mobile");
+    console.log("function that will be executed if screen size is not mobile and every time screen size stops being mobile");
   });
 
   wiggle.queueOff('mobile', function() {
-    console.log("function that will be executed every time screen size stops to be mobile");
+    console.log("function that will be executed every time screen size stops being mobile");
   });
 
   if(wiggle.is('desktop')) {
     console.log("Current screen size is desktop");
   }
+
+  // Based on our screen definition we can have multiple screens active at the same time
+  wiggle.is('desktop');
+  wiggle.is('custom-size'); // Based on screen definition both could be true.
 
   /*
    * In previous versions of wiggle there was .once function that would execute only once when we match screen size.
@@ -77,10 +82,10 @@ Other problem was lot of if-s and ugly code to detect when browser is in desktop
 
 For example we will use Vue js and Vuex store plugin but similar approach can be taken with React and Redux. Or Angular.
 
-Basic premises is that we will have components that will need to be displayed only desktop and not on mobile.
-We can easily hide them with media-queries and display none. But by hiding them like that components will still render and components code will still be executed which is far from ideal.
+Basic premises is that we will have components that will need to be displayed only on desktop but on mobile.
+We can easily hide them with media-queries and display none. Problem with hiding them like that is that components will still render and components code will still be executed which is far from ideal.
 
-With wiggle and v-if vue directive we can easily optimize that by not rendering components that is not used.
+With wiggle and v-if directive we can easily optimize that by not rendering components that is not used.
 
 ```javascript
 // Update view.type reactive Vuex store state with wiggle
@@ -89,16 +94,21 @@ wiggle.on('tablet', () => Store.dispatch('changeViewType', View.type.TABLET));
 wiggle.on('mobile', () => Store.dispatch('changeViewType', View.type.MOBILE));
 
 // Now in our vue component we can have computed property as this
- isDesktop() {
-  return this.$store.state.App.view.type === View.type.DESKTOP;
+computed: {
+  isDesktop() {
+    return this.$store.state.App.view.type === View.type.DESKTOP;
+  }
 }
-....
+```
 
 The above code allow us to do something like
 
-<widgets-sidebar v-if="isDesktop"><widgets-sidebar>
 
-And there is huge difference by doing that then just display none from css.
+```html
+<widgets-sidebar v-if="isDesktop"><widgets-sidebar>
+```
+
+There is huge difference by doing that then just display none from css.
 
 
 
