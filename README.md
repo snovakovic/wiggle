@@ -89,9 +89,9 @@ With wiggle and v-if directive we can easily optimize that by not rendering comp
 
 ```javascript
 // Update view.type reactive Vuex store state with wiggle
-wiggle.on('desktop', () => Store.dispatch('changeViewType', View.type.DESKTOP));
-wiggle.on('tablet', () => Store.dispatch('changeViewType', View.type.TABLET));
-wiggle.on('mobile', () => Store.dispatch('changeViewType', View.type.MOBILE));
+wiggle.on('desktop', () => store.dispatch('changeViewType', View.type.DESKTOP));
+wiggle.on('tablet', () => store.dispatch('changeViewType', View.type.TABLET));
+wiggle.on('mobile', () => store.dispatch('changeViewType', View.type.MOBILE));
 
 // Now in our vue component we can have computed property as this
 computed: {
