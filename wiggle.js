@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.4.0
+    version: 0.4.1
  ***************************************************/
 (function(global, factory) {
   // UMD pattern
@@ -15,7 +15,6 @@
 }(this, (function() {
 
   function Instance(screens, resizeDelay) {
-    // Declare privates
     var doit;
     var activeScreens = [];
     var subscribers = {};
@@ -24,7 +23,7 @@
       off: 'off'
     };
 
-    // Initialize instance
+    // Initialize
 
     Object.getOwnPropertyNames(subscribeType).forEach(function(name) {
       subscribers[name] = {};
@@ -102,7 +101,7 @@
       });
     }
 
-    // Export public methods
+    // Export api
 
     this.on = function(screenName, callback) {
       if (isScreenActive(screenName)) { callback(); }
@@ -149,7 +148,7 @@
         }
       });
 
-      // Return new wiggle instance
+      // Instantiate wiggle
 
       return new Instance(screens, settings.resizeDelay || 25);
     }
