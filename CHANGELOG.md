@@ -1,3 +1,11 @@
+## [0.5.0] - 2017-03-17
+### Changed
+- Init is accepting array of screens and resizeDelay instead of settings object
+- minor code update
+
+### Added
+- Validation for screens when calling init
+
 ## [0.3.0] - 2017-03-07
 ### Changed
 - initialize instance with new

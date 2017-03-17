@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.4.1
+    version: 0.5.0
  ***************************************************/
 (function(global, factory) {
   // UMD pattern
@@ -131,9 +131,7 @@
   }
 
   return {
-    init: function(settings) {
-      const screens = settings ? settings.screens : undefined;
-
+    init: function(screens, resizeDelay) {
       // Validate screens
 
       var linkToReadme = 'Check readme file at https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
@@ -150,7 +148,7 @@
 
       // Instantiate wiggle
 
-      return new Instance(screens, settings.resizeDelay || 25);
+      return new Instance(screens, Number(resizeDelay) || 25);
     }
   }
 })));
