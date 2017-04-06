@@ -53,8 +53,7 @@
 
   <script>
 
-    var wiggle = Wiggle.init({
-      screens: [{
+    var wiggle = Wiggle.init([{
         minWidth: 992,
         name: 'desktop'
       }, {
@@ -64,16 +63,13 @@
       }, {
         maxWidth: 767,
         name: 'mobile'
-      }]
-    });
+      }]);
 
 
-    var wiggle2 = Wiggle.init({
-      screens: [{
+    var wiggle2 = Wiggle.init([{
         maxWidth: 560,
         name: 'test'
-      }]
-    });
+      }]);
 
     wiggle2.on('test', function () {
       console.log('wiggle 2 test is success');

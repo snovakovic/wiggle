@@ -1,10 +1,10 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.3.1
+    version: 0.5.0
  ***************************************************/
 (function(global, factory) {
-  //UMD pattern
+  // UMD pattern
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory();
   } else if (typeof define === 'function' && define.amd) {
@@ -14,9 +14,7 @@
   }
 }(this, (function() {
 
-  function Instance(settings) {
-    settings.resizeDelay = settings.resizeDelay || 25;
-    var screens = Array.isArray(settings.screens) ? settings.screens : [];
+  function Instance(screens, resizeDelay) {
     var doit;
     var activeScreens = [];
     var subscribers = {};
@@ -25,7 +23,7 @@
       off: 'off'
     };
 
-    // Initialize application
+    // Initialize
 
     Object.getOwnPropertyNames(subscribeType).forEach(function(name) {
       subscribers[name] = {};
@@ -33,11 +31,10 @@
 
     window.addEventListener('resize', function() {
       clearTimeout(doit);
-      doit = setTimeout(updateActiveScreens, settings.resizeDelay);
+      doit = setTimeout(updateActiveScreens, resizeDelay);
     }, true);
 
     updateActiveScreens();
-
 
     // Define private methods
 
@@ -82,7 +79,7 @@
     }
 
     function matchMedia(property, width) {
-      if(typeof width === 'number') { width = width + 'px'; }
+      if (typeof width === 'number') { width += 'px'; }
       return width ? window.matchMedia('(' + property + ':' + width + ')').matches : false;
     }
 
@@ -100,15 +97,14 @@
       subscribers[type][name].push({
         name: name,
         type: type,
-        execute: callback,
+        execute: callback
       });
     }
 
-
-    // Export public methods
+    // Export API
 
     this.on = function(screenName, callback) {
-      if(isScreenActive(screenName)) { callback(); }
+      if (isScreenActive(screenName)) { callback(); }
       this.queueOn(screenName, callback);
     };
 
@@ -117,7 +113,7 @@
     };
 
     this.off = function(screenName, callback) {
-      if(!isScreenActive(screenName)) { callback(); }
+      if (!isScreenActive(screenName)) { callback(); }
       this.queueOff(screenName, callback);
     };
 
@@ -135,8 +131,24 @@
   }
 
   return {
-    init: function(settings) {
-      return new Instance(settings);
+    init: function(screens, resizeDelay) {
+      // Validate screens
+
+      var linkToReadme = 'Check readme file at https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
+
+      if (!screens || !Array.isArray(screens)) {
+        throw Error('Wiggle: Missing required screens array configuration. ' + linkToReadme);
+      }
+
+      screens.forEach(function(screen) {
+        if (typeof screen !== 'object' || !screen.name || (!screen.minWidth && !screen.maxWidth)) {
+          throw Error('Wiggle: Invalid screens configuration. ' + linkToReadme);
+        }
+      });
+
+      // Instantiate wiggle
+
+      return new Instance(screens, Number(resizeDelay) || 25);
     }
   }
 })));
