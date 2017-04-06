@@ -20,7 +20,22 @@
     "url": "https://github.com/snovakovic/wiggle/issues"
   },
   "homepage": "https://github.com/snovakovic/wiggle#readme",
+  "scripts": {
+    "test": "karma start"
+  },
   "devDependencies": {
-    "eslint": "^3.16.0"
+    "eslint": "^3.17.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-uglify": "^2.0.1",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-junit-reporter": "^1.2.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "phantomjs": "^2.1.7"
   }
 }
