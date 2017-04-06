@@ -1,16 +1,12 @@
 # wiggle v0.6.0
 
-Small responsive subscriber to react on layout changes inside JS.
+Small responsive subscriber to react to match media changes.
 
 Hmmm what?
 
 In short if you have responsive page and you want to execute JS code for any reason when page changes layout from desktop to tablet or mobile, or you want to execute code only on desktop or... You get my point. Meet wiggle you might like it.
 
-It is specifically designed to match your CSS media query breakpoints with JS code subscribers.
-
-Library was born when I had to use jQuery to swap position of multiple elements based on if screen size matches desktop or mobile design.
-First problem was that $(window).width() < 768px does not match css media query 768px.
-Other problem was lot of if-s and ugly code to detect when browser is in desktop or tablet or mobile view.
+Library was born when I had to use jQuery to swap position of multiple elements based on if screen size matches desktop, tablet or mobile design. After ugly code with lot of if-s to detect when browser is in desktop, tablet or mobile view the library has been born.
 
 
 ```javascript
@@ -107,9 +103,6 @@ The above code allow us to do something like
 ```html
 <widgets-sidebar v-if="isDesktop"><widgets-sidebar>
 ```
-
-There is huge difference by doing that then just display none from css.
-
 
 
 ### Supported browsers
