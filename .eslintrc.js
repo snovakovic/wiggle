@@ -2,7 +2,7 @@ module.exports = {
   extends: 'eslint:recommended',
   env: {
     browser: true,
-    es6: true
+    jasmine: true
   },
   ecmaFeatures: {
     blockBindings: true,
@@ -10,7 +10,8 @@ module.exports = {
   },
   globals: {
     module: true,
-    define: true
+    define: true,
+    Wiggle: true,
   },
   rules: {
     'no-console': 1,

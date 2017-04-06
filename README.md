@@ -1,4 +1,4 @@
-# wiggle v0.5.0
+# wiggle v0.6.0
 
 Small responsive subscriber to react on layout changes inside JS.
 

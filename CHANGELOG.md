@@ -1,3 +1,7 @@
+## [0.6.0] - 2017-04-06
+### Changed
+- Make public API immutable
+
 ## [0.5.0] - 2017-03-17
 ### Changed
 - Init is accepting array of screens and resizeDelay instead of settings object

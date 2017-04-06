@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.5.0
+    version: 0.6.0
  ***************************************************/
 (function(global, factory) {
   // UMD pattern
@@ -128,6 +128,8 @@
     this.getActiveScreens = function() {
       return activeScreens;
     }
+
+    Object.freeze(this);
   }
 
   return {
