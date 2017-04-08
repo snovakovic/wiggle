@@ -1,4 +1,4 @@
-# wiggle v0.6.0
+# wiggle v0.7.0
 
 Small responsive subscriber to react to match media changes.
 

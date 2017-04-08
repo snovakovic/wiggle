@@ -1,6 +1,6 @@
 {
   "name": "wiggle",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Media query change listener",
   "main": "wiggle.js",
   "repository": {

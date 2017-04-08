@@ -1,3 +1,7 @@
+## [0.7.0] - 2017-04-08
+### Removed
+- getActiveScreens method have been removed from wiggle api
+
 ## [0.6.0] - 2017-04-06
 ### Changed
 - Make public API immutable
