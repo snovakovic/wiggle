@@ -31,7 +31,6 @@ describe('Wiggle', function() {
     expect(wiggle.off).toEqual(jasmine.any(Function));
     expect(wiggle.queueOff).toEqual(jasmine.any(Function));
     expect(wiggle.is).toEqual(jasmine.any(Function));
-    expect(wiggle.getActiveScreens).toEqual(jasmine.any(Function));
   });
 
   it('Wiggle should notify subscribers', function(done) {
