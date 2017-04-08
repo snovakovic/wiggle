@@ -4,10 +4,6 @@ module.exports = {
     browser: true,
     jasmine: true
   },
-  ecmaFeatures: {
-    blockBindings: true,
-    templateStrings: true
-  },
   globals: {
     module: true,
     define: true,
