@@ -1,13 +1,16 @@
 describe('Wiggle', function() {
   var wiggle;
 
-  beforeEach(function() {
-    // Mock matchMedia to return true if desktop
+  function mockActiveScreen(size) {
     window.matchMedia = function(query) {
       return {
-        matches: query.indexOf('992') !== -1
+        matches: query.indexOf(size) !== -1
       }
     };
+  }
+
+  beforeEach(function() {
+    mockActiveScreen('992');
 
     wiggle = Wiggle.init([{
       minWidth: 992,
@@ -50,4 +53,81 @@ describe('Wiggle', function() {
     expect(wiggle.on).toEqual(jasmine.any(Function));
   });
 
+  it('On/Off listeners should be executed on resize', function(done) {
+    var onDesktop = 0;
+    var offDesktop = 0;
+    var onTablet = 0;
+    var offTablet = 0;
+    var onMobile = 0;
+    var offMobile = 0;
+
+    // Initial screen size is on desktop
+    wiggle.on('desktop', function() { onDesktop += 1; });
+    wiggle.off('desktop', function() { offDesktop += 1; });
+    wiggle.on('tablet', function() { onTablet += 1; });
+    wiggle.off('tablet', function() { offTablet += 1; });
+    wiggle.on('mobile', function() { onMobile += 1; });
+    wiggle.off('mobile', function() { offMobile += 1; });
+
+    expect(onDesktop).toEqual(1);
+    expect(offDesktop).toEqual(0);
+    expect(onTablet).toEqual(0);
+    expect(offTablet).toEqual(1);
+    expect(onMobile).toEqual(0);
+    expect(offMobile).toEqual(1);
+
+    // Set mobile to be active screen and activate resize event
+    mockActiveScreen('767');
+    window.dispatchEvent(new Event('resize'));
+
+    setTimeout(function() {
+      expect(onDesktop).toEqual(1);
+      expect(offDesktop).toEqual(1);
+      expect(onTablet).toEqual(0);
+      expect(offTablet).toEqual(1);
+      expect(onMobile).toEqual(1);
+      expect(offMobile).toEqual(1);
+
+      done();
+    }, 50);
+  });
+
+  it('queueOn/queueOff Listeners should be executed on resize', function(done) {
+    var onDesktop = 0;
+    var offDesktop = 0;
+
+    // Initial screen size is on desktop
+    wiggle.queueOn('desktop', function() { onDesktop += 1; });
+    wiggle.queueOff('desktop', function() { offDesktop += 1; });
+
+    // Queue should not be triggered on first screen size
+    expect(onDesktop).toEqual(0);
+    expect(offDesktop).toEqual(0);
+
+    // Set mobile to be active screen and activate resize event
+    mockActiveScreen('767');
+    window.dispatchEvent(new Event('resize'));
+
+    setTimeout(function() {
+      expect(onDesktop).toEqual(0);
+      expect(offDesktop).toEqual(1);
+      // Set desktop to be active screen and activate resize event
+      mockActiveScreen('992');
+      window.dispatchEvent(new Event('resize'));
+
+      setTimeout(function() {
+        expect(onDesktop).toEqual(1);
+        expect(offDesktop).toEqual(1);
+
+        // No changes no listeners should be trigered
+        window.dispatchEvent(new Event('resize'));
+
+        setTimeout(function() {
+          expect(onDesktop).toEqual(1);
+          expect(offDesktop).toEqual(1);
+          done();
+        }, 50);
+      }, 50);
+    }, 50);
+  });
 });
