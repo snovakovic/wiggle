@@ -1,24 +1,25 @@
 # wiggle
 
-Small responsive subscriber to react to match media changes.
+Subscribe and react to page breakpoints.
+Ideal for responsive pages as it allows us to easily react with JS on page layout changes.
 
-Hmmm what?
+### Examples of usage
 
-In short if you have responsive page and you want to execute JS code for any reason when page changes layout from desktop to tablet or mobile, or you want to execute code only on desktop or... You get my point. Meet wiggle you might like it.
-
-Library was born when I had to use jQuery to swap position of multiple elements based on if screen size matches desktop, tablet or mobile design. After ugly code with lot of if-s to detect when browser is in desktop, tablet or mobile view the library has been born.
+- We might need to swipe position of 2 elements with js (jQuery) when page layout changes from desktop to layout and vice versa
+- We want to optimize code to include only components (html) that are used on current screen layout. (check Examples of usage in Vue js at the bottom for more info)
+- We might want to optimize page to load additional resources only if layout is desktop.
+- In any other case when we want to execute custom JS code on specific page layout.
 
 
 ```javascript
   /**
-  * Before using library we need to initialize it by calling init and passing our application screen definitions.
+  * Before using library we need to initialize it with desired breakpoint.
   * Init returns new wiggle instance that allow us to listen for defined screens definitions
-  * In order for application to behave smoothly screens definitions should match application CSS breakpoints.
-  * We can have multiple instances of wiggle with different screen definitions. In 99% only one instance is required and desired.
+  * Even thought we can have multiple instances of wiggle in 99% we should have only one instance.
   **/
   var wiggle = Wiggle.init([{
       minWidth: 992, // Default unit is px. Same as writing '992px'
-      name: 'desktop' // Unique name based on which we can create subscriptions. Name can be any string that is valid JS object property name and it have to be unique for each screen.
+      name: 'desktop' // Name can be any string that is valid JS object property name and it have to be unique for each screen.
     }, {
       minWidth: '768',
       maxWidth: '62em', // We can combine different measurements units but it does not mean we should!
@@ -30,8 +31,9 @@ Library was born when I had to use jQuery to swap position of multiple elements 
 
   /**
   * Add subscriber for 'mobile' screen.
-  * It will execute if current screen size is mobile and every time we switch from some other screens size to mobile.
+  * Subscriber will execute if current screen size is mobile and every time we switch from some other screens size to mobile.
   * Instead of mobile we can subscribe to any other defined screen size like 'desktop' or 'tablet'
+  * Mobile screen size is defined during initialization of wiggle
   **/
   wiggle.on('mobile', function() {
     console.log("Function that will be executed if current screen size is mobile and every time screen sizes switches to mobile");
@@ -41,10 +43,10 @@ Library was born when I had to use jQuery to swap position of multiple elements 
     console.log("We can have multiple listeners for same screen size and each will be executed.");
   });
 
-  /**
-  * queueOn behaves same as on with difference that it won't execute when declared only when screen size changes from some other screen size to defined screen size.
-  * in 99% casess on listener is right one to use.
-  **/
+  wiggle.on('desktop', function() {
+    console.log("Function that will be executed if current screen size is mobile and every time screen sizes switches to mobile.");
+  });
+
   wiggle.queueOn('mobile', function() {
     console.log("function that will be executed every time screen sizes switches to mobile size");
   });
@@ -60,18 +62,6 @@ Library was born when I had to use jQuery to swap position of multiple elements 
   if(wiggle.is('desktop')) {
     console.log("Current screen size is desktop");
   }
-
-  // Based on our screen definition we can have multiple screens active at the same time
-  wiggle.is('desktop');
-  wiggle.is('custom-size'); // Based on screen definition both could be true.
-
-  /*
-   * In previous versions of wiggle there was .once function that would execute only once when we match screen size.
-   * It was removed as we can easily achieve same behavior with even more flexibility by using lodash once or similar solutions.
-   */
-  wiggle.on('tablet', _.once(function() {
-    console.log("This will be executed only once for screen size tablet");
-  }));
 ```
 
 ### Examples of usage in Vue js
@@ -79,7 +69,8 @@ Library was born when I had to use jQuery to swap position of multiple elements 
 For example we will use Vue js and Vuex store plugin but similar approach can be taken with React and Redux. Or Angular.
 
 Basic premises is that we will have components that will need to be displayed only on desktop.
-We can easily hide them with media-queries and display none. Problem with hiding them like that is that components will still render and components code will still be executed which is far from ideal.
+We can easily hide them with media-queries and display none. Problem with hiding them like that is that components will
+still render and components code will still be executed which is far from ideal.
 
 With wiggle and v-if directive we can easily optimize that by not rendering components that is not used.
 
