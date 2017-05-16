@@ -1,12 +1,12 @@
 # wiggle
 
 Subscribe and react to page breakpoints.
-Ideal for responsive pages as it allows us to easily react with JS on page layout changes.
+Ideal for responsive pages as it allows us to easily react with js on page layout changes.
 
-### Examples of usage
+### When to use it
 
-- We might need to swipe position of 2 elements with js (jQuery) when page layout changes from desktop to layout and vice versa
-- We want to optimize code to include only components (html) that are used on current screen layout. (check Examples of usage in Vue js at the bottom for more info)
+- We might need to swipe position of 2 elements with js/jQuery when page layout changes from desktop to mobile layout and vice versa
+- We want to optimize code to include only components that are used on current screen layout (in React, Vue, Angular...). Check "examples of usage in Vue.js" at the bottom for more info
 - We might want to optimize page to load additional resources only if layout is desktop.
 - In any other case when we want to execute custom JS code on specific page layout.
 
@@ -64,15 +64,13 @@ Ideal for responsive pages as it allows us to easily react with JS on page layou
   }
 ```
 
-### Examples of usage in Vue js
-
-For example we will use Vue js and Vuex store plugin but similar approach can be taken with React and Redux. Or Angular.
+### Examples of usage in Vue.js
 
 Basic premises is that we will have components that will need to be displayed only on desktop.
 We can easily hide them with media-queries and display none. Problem with hiding them like that is that components will
 still render and components code will still be executed which is far from ideal.
 
-With wiggle and v-if directive we can easily optimize that by not rendering components that is not used.
+With wiggle and v-if directive we can easily optimize that and render only components that are actually used on current screen layout.
 
 ```javascript
 // Update view.type reactive Vuex store state with wiggle
@@ -98,6 +96,6 @@ The above code allow us to do something like
 
 ### Supported browsers
 
-Wiggle use [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) to detect layout changes.
+Wiggle is using [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) to detect layout changes.
 If you need to support browser that does not support matchMedia (IE9 and below) you need to include [matchMedia polyfill](https://github.com/paulirish/matchMedia.js) before using this library.
 
