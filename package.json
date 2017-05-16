@@ -1,5 +1,5 @@
 {
-  "name": "wiggle",
+  "name": "wiggle.js",
   "version": "0.7.0",
   "description": "Media query change listener",
   "main": "wiggle.js",
