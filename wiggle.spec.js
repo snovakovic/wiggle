@@ -56,7 +56,7 @@ describe('Wiggle', function() {
     expect(wiggle.is('notExisting')).toEqual(false);
   });
 
-  xit('wiggle property should be immutable', function() {
+  it('wiggle property should be immutable', function() {
     wiggle.is = 'changed is';
     wiggle.on = 'changed on';
 
