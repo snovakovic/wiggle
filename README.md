@@ -1,11 +1,11 @@
 # wiggle
 
 Subscribe and react to page breakpoints.
-Ideal for responsive pages as it allows us to easily react with js on page layout changes.
+Ideal for responsive pages as it allows us to easily react with JS on page layout changes.
 
 ### When to use it
 
-- We might need to swipe position of 2 elements with js/jQuery when page layout changes from desktop to mobile layout and vice versa
+- We might need to swipe position of 2 elements with JS/jQuery when page layout changes from desktop to mobile layout and vice versa
 - We want to optimize code to include only components that are used on current screen layout (in React, Vue, Angular...). Check "examples of usage in Vue.js" at the bottom for more info
 - We might want to optimize page to load additional resources only if layout is desktop.
 - In any other case when we want to execute custom JS code on specific page layout.
