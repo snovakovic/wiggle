@@ -1,7 +1,9 @@
 # wiggle
 
+
 Subscribe and react to page breakpoints.
 Ideal for responsive pages as it allows us to easily react with JS on page layout changes.
+
 
 ### When to use it
 
