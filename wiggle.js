@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 0.7.0
+    version: 1.0.0
  ***************************************************/
 (function(global, factory) {
   // UMD pattern
@@ -14,9 +14,8 @@
   }
 }(this, (function() {
 
-  function Instance(screens, resizeDelay) {
-    var doit;
-    var activeScreens = [];
+  function Instance(screens) {
+    var activeScreens = {};
     var subscribers = {};
     var subscribeType = {
       on: 'on',
@@ -25,35 +24,52 @@
 
     // Initialize
 
-    Object.getOwnPropertyNames(subscribeType).forEach(function(name) {
-      subscribers[name] = {};
+    Object.keys(subscribeType).forEach(function(key) {
+      subscribers[key] = {};
     });
 
-    window.addEventListener('resize', function() {
-      clearTimeout(doit);
-      doit = setTimeout(updateActiveScreens, resizeDelay);
-    }, true);
+    screens.forEach(function(screen) {
+      var mediaQuery = constructMediaQuery(screen);
+      var mql = window.matchMedia(mediaQuery);
 
-    updateActiveScreens();
+      screenSwitch(screen, mql);
+      mql.addListener(screenSwitch.bind(null, screen));
+    });
 
-    // Define private methods
+    // Private methods
 
-    function updateActiveScreens() {
-      screens.forEach(function(screen) {
-        isScreenActive(screen)
-          ? activateScreen(screen.name)
-          : deactivateScreen(screen.name);
-      });
+    function screenSwitch(screen, mql) {
+      mql.matches ? activateScreen(screen.name) : deactivateScreen(screen.name);
     }
 
-    function isScreenActive(screen) {
-      if (typeof screen === 'string') {
-        screen = getScreen(screen);
+    function sizeToMediaQuery(size, prop) {
+      size = typeof size === 'number' ? size + 'px' : size;
+      return size ? '(' + prop + ':' + size + ')' : '';
+    }
+
+    function constructMediaQuery(screen) {
+      if (screen.mediaQuery) {
+        return screen.mediaQuery;
       }
 
-      return Boolean(screen && (screen.minWidth || screen.maxWidth) &&
-        (!screen.minWidth || matchMedia('min-width', screen.minWidth)) &&
-        (!screen.maxWidth || matchMedia('max-width', screen.maxWidth)));
+      var minWidth = sizeToMediaQuery(screen.minWidth, 'min-width');
+      var maxWidth = sizeToMediaQuery(screen.maxWidth, 'max-width');
+      var appender = (minWidth && maxWidth) ? ' and ' : '';
+
+      return minWidth + appender + maxWidth;
+    }
+
+    function isScreenActive(name) {
+      return Boolean(activeScreens[name]);
+    }
+
+    function notifySubscribers(screenName, type) {
+      var screenSubscribers = subscribers[type][screenName];
+      if (screenSubscribers) {
+        screenSubscribers.forEach(function(subscriber) {
+          subscriber.execute();
+        });
+      }
     }
 
     function activateScreen(name) {
@@ -70,83 +86,60 @@
       }
     }
 
-    function getScreen(name) {
-      for (var i = 0; i < screens.length; i++) {
-        if (name === screens[i].name) {
-          return screens[i];
-        }
-      }
-    }
-
-    function matchMedia(property, width) {
-      if (typeof width === 'number') { width += 'px'; }
-      return width ? window.matchMedia('(' + property + ':' + width + ')').matches : false;
-    }
-
-    function notifySubscribers(screenName, type) {
-      var screenSubscribers = subscribers[type][screenName];
-      if (screenSubscribers && screenSubscribers.length) {
-        screenSubscribers.forEach(function(subscriber) {
-          subscriber.execute();
-        });
-      }
-    }
-
-    function subscribe(name, type, callback) {
+    function subscribe(name, type, cb) {
       subscribers[type][name] = subscribers[type][name] || [];
       subscribers[type][name].push({
         name: name,
         type: type,
-        execute: callback
+        execute: cb
       });
     }
 
-    // Export API
+    // Public
 
-    this.on = function(screenName, callback) {
-      if (isScreenActive(screenName)) { callback(); }
-      this.queueOn(screenName, callback);
+    this.on = function(name, cb) {
+      if (isScreenActive(name)) { cb(); }
+      this.on.change(name, cb);
     };
 
-    this.queueOn = function(screenName, callback) {
-      subscribe(screenName, subscribeType.on, callback);
+    this.on.change = function(name, cb) {
+      subscribe(name, subscribeType.on, cb);
     };
 
-    this.off = function(screenName, callback) {
-      if (!isScreenActive(screenName)) { callback(); }
-      this.queueOff(screenName, callback);
+    this.off = function(name, cb) {
+      if (!isScreenActive(name)) { cb(); }
+      this.off.change(name, cb);
     };
 
-    this.queueOff = function(screenName, callback) {
-      subscribe(screenName, subscribeType.off, callback);
+    this.off.change = function(name, cb) {
+      subscribe(name, subscribeType.off, cb);
     };
 
-    this.is = function(screenName) {
-      return Boolean(activeScreens[screenName]);
+    this.is = function(name) {
+      return Boolean(activeScreens[name]);
     };
 
     Object.freeze(this);
   }
 
   return {
-    init: function(screens, resizeDelay) {
-      // Validate screens
-
-      var linkToReadme = 'Check readme file at https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
+    init: function(screens) {
+      var readme = 'Check readme file at https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
 
       if (!screens || !Array.isArray(screens)) {
-        throw Error('Wiggle: Missing required screens array configuration. ' + linkToReadme);
+        throw Error('Wiggle: Missing required screens array configuration. ' + readme);
       }
 
       screens.forEach(function(screen) {
-        if (typeof screen !== 'object' || !screen.name || (!screen.minWidth && !screen.maxWidth)) {
-          throw Error('Wiggle: Invalid screens configuration. ' + linkToReadme);
+        if (typeof screen !== 'object' || !screen.name
+          || (!(screen.mediaQuery || screen.minWidth || screen.maxWidth))) {
+          throw Error('Wiggle: Invalid screens configuration. ' + readme);
         }
       });
 
       // Instantiate wiggle
 
-      return new Instance(screens, Number(resizeDelay) || 25);
+      return new Instance(screens);
     }
   }
 })));
