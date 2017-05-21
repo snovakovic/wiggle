@@ -23,27 +23,27 @@ to easily react on changes in page layout.
 
   // We are subscribing to names defined during initiation of wiggle.
   screen.on('mobile', function() {
-    console.log("Function that will be executed if current screen size is mobile and every time screen size switches to mobile");
+    console.log('Function that will be executed if current screen size is mobile and every time screen size switches to mobile');
   });
 
   screen.on.change('mobile', function() {
-    console.log("Function that will be executed every time screen size switches to mobile.");
+    console.log('Function that will be executed every time screen size switches to mobile.');
   });
 
   screen.on('desktop', function() {
-    console.log("Screen size is desktop");
+    console.log('Screen size is desktop');
   });
 
   screen.off('tablet', function() {
-    console.log("function that will be executed if screen size is not tablet and every time screen size stops being tablet");
+    console.log('function that will be executed if screen size is not tablet and every time screen size stops being tablet');
   });
 
   screen.off.change('desktop', function() {
-    console.log("function that will be executed every time screen size stops being mobile");
+    console.log('function that will be executed every time screen size stops being mobile');
   });
 
   if(screen.is('desktop')) {
-    console.log("Current screen size is desktop");
+    console.log('Current screen size is desktop');
   }
 
   // We can have multiple instances of wiggle
@@ -56,7 +56,7 @@ to easily react on changes in page layout.
   }]);
 
   orientation.on('portrait', function() {
-    console.log("function that will be executed if screen is in portrait mode and every time screen switches to portrait mode");
+    console.log('function that will be executed if screen is in portrait mode and every time screen switches to portrait mode');
   });
 
 ```
