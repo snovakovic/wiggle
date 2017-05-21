@@ -6,15 +6,15 @@ to easily react on changes in page layout.
 
 ```javascript
   /**
-  * In order to use wiggle we need to initialize it with our desire configuration.
-  * Init returns new wiggle instance that allow us to listen for defined screens definitions
+  * In order to use wiggle we need to initialize it.
+  * Init returns new wiggle instance that allow us to subscribe to defined rules
   **/
   var screen = Wiggle.init([{
       name: 'desktop', // Required and unique for instance. It can be any string that is valid JS object name
       minWidth: 992
     }, {
       name: 'tablet',
-      minWidth: '768', // Can be number or string. If number it it defaults to px
+      minWidth: '768', // Can be number or string. In case of number it defaults to px measurements unit
       maxWidth: '62em' // We can combine different measurements units but it does not mean we should!
     }, {
       name: 'mobile',
@@ -23,23 +23,22 @@ to easily react on changes in page layout.
 
   // We are subscribing to names defined during initiation of wiggle.
   screen.on('mobile', function() {
-    console.log("Function that will be executed if current screen size is mobile and every time screen sizes switches to mobile");
+    console.log("Function that will be executed if current screen size is mobile and every time screen size switches to mobile");
   });
 
-  // on.change will not execute on declaration only after first change. as opposite to on that will execute when declared if it matches conditions
   screen.on.change('mobile', function() {
-    console.log("it will execute every time we change from some other screen size to mobile screen size.");
+    console.log("Function that will be executed every time screen size switches to mobile.");
   });
 
   screen.on('desktop', function() {
-    console.log("Function that will be executed if current screen size is mobile and every time screen sizes switches to mobile.");
+    console.log("Screen size is desktop");
   });
 
   screen.off('tablet', function() {
     console.log("function that will be executed if screen size is not tablet and every time screen size stops being tablet");
   });
 
-  screen.off.change('mobile', function() {
+  screen.off.change('desktop', function() {
     console.log("function that will be executed every time screen size stops being mobile");
   });
 
@@ -57,7 +56,7 @@ to easily react on changes in page layout.
   }]);
 
   orientation.on('portrait', function() {
-    console.log("function that will be executed if screen is in portrait mode and every time screen change to portrait mode");
+    console.log("function that will be executed if screen is in portrait mode and every time screen switches to portrait mode");
   });
 
 ```
