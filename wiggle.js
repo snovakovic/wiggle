@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 1.0.0
+    version: 1.1.0
  ***************************************************/
 (function(global, factory) {
   // UMD pattern

@@ -1,6 +1,6 @@
 {
   "name": "wiggle.js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Media query change listener",
   "main": "wiggle.js",
   "repository": {
@@ -8,8 +8,7 @@
     "url": "git+https://github.com/snovakovic/wiggle.git"
   },
   "keywords": [
-    "media-query",
-    "MediaQuery",
+    "media query",
     "matchMedia",
     "responsive",
     "resize"
