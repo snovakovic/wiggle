@@ -1,3 +1,7 @@
+## [1.1.0] - 2017-05-21
+### Changed
+- remove window resize listener and use match media listener
+
 ## [1.0.0] - 2017-05-18
 - Version  bumped to stable after testing in production
 

@@ -1,0 +1,38 @@
+<html>
+<script src="wiggle.js"></script>
+
+<body>
+  test
+</body>
+
+<script>
+  const screen = Wiggle.init([{
+    name: 'desktop',
+    minWidth: 900,
+  }, {
+    name: 'tablet',
+    minWidth: 600,
+    maxWidth: 900
+  }, {
+    name: 'mobile',
+    maxWidth: 600
+  }]);
+
+  screen.on('desktop', () => console.log('desktop je'));
+  screen.on('tablet', () => console.log('tablet je'));
+  screen.on.change('mobile', () => console.log('mobile change on'));
+  screen.off('mobile', () => console.log('mobile off'));
+
+  const orientation = Wiggle.init([{
+    name: 'portrait',
+    mediaQuery: '(orientation: portrait)'
+  }, {
+    name: 'landscape',
+    mediaQuery: '(orientation: landscape)'
+  }]);
+
+  orientation.on('portrait', () => console.log('portrait'));
+  orientation.on('landscape', () => console.log('landscape'));
+</script>
+
+</html>
