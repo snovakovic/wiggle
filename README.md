@@ -3,6 +3,7 @@
 Small wrapper around [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
 to easily react on changes in page layout.
 
+npm install wiggle.js --save
 
 ```javascript
   /**
@@ -21,7 +22,7 @@ to easily react on changes in page layout.
       maxWidth: 767
     }]);
 
-  // We are subscribing to names defined during initiation of wiggle.
+  // We are subscribing to names defined during initialization of wiggle.
   screen.on('mobile', function() {
     console.log('Function that will be executed if current screen size is mobile and every time screen size switches to mobile');
   });
