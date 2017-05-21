@@ -39,7 +39,7 @@
     // Private methods
 
     function screenSwitch(screen, mql) {
-      mql.matches ? activateScreen(screen.name) : deactivateScreen(screen.name);
+      mql.matches ? activateScreen(screen) : deactivateScreen(screen);
     }
 
     function sizeToMediaQuery(size, prop) {
@@ -72,17 +72,17 @@
       }
     }
 
-    function activateScreen(name) {
-      if (!activeScreens[name]) {
-        activeScreens[name] = screen;
-        notifySubscribers(name, subscribeType.on);
+    function activateScreen(screen) {
+      if (!activeScreens[screen.name]) {
+        activeScreens[screen.name] = screen;
+        notifySubscribers(screen.name, subscribeType.on);
       }
     }
 
-    function deactivateScreen(name) {
-      if (activeScreens[name]) {
-        delete activeScreens[name];
-        notifySubscribers(name, subscribeType.off);
+    function deactivateScreen(screen) {
+      if (activeScreens[screen.name]) {
+        delete activeScreens[screen.name];
+        notifySubscribers(screen.name, subscribeType.off);
       }
     }
 
