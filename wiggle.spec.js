@@ -1,70 +1,71 @@
 describe('Wiggle', function() {
   var wiggle;
-  var screens = {
-    desktop: {
-      minWidth: 992,
-      name: 'desktop'
-    },
-    tablet: {
-      minWidth: 768,
-      maxWidth: 991,
-      name: 'tablet'
-    },
-    mobile: {
-      maxWidth: 767,
-      name: 'mobile'
-    }
-  }
+  var listeners;
+  var activeSize;
 
-  function mockActiveScreen(name) {
-    var size = screens[name].minWidth || screens[name].maxWidth;
-    window.matchMedia = function(query) {
-      return {
-        matches: query.indexOf(size.toString()) !== -1
+  // Mock match media
+  window.matchMedia = function(query) {
+    return {
+      get matches() {
+        var size;
+        if (query.indexOf('992') !== -1) {
+          size = 'desktop'
+        } else if (query.indexOf('991') !== -1) {
+          size = 'tablet'
+        } else if (query.indexOf('767') !== -1) {
+          size = 'mobile'
+        }
+
+        return size === activeSize;
+      },
+      addListener: function(cb) {
+        listeners.push(cb.bind(null, this));
+        cb(this);
       }
-    };
-  }
+    }
+  };
 
-  function waitResize(fn) {
-    setTimeout(fn, 50);
+  // Mock change in screen
+  function triggerScreenChange(name) {
+    activeSize = name;
+    listeners.forEach(function(cb) { cb(); });
   }
 
   beforeEach(function() {
-    mockActiveScreen('desktop');
+    listeners = [];
+    activeSize = 'desktop';
 
-    wiggle = Wiggle.init([
-      screens.desktop,
-      screens.tablet,
-      screens.mobile
-    ]);
+    wiggle = Wiggle.init([{
+      minWidth: 992,
+      name: 'desktop'
+    }, {
+      minWidth: '768px',
+      maxWidth: '991px',
+      name: 'tablet'
+    }, {
+      maxWidth: 767,
+      name: 'mobile'
+    }]);
   });
 
-  it('Wiggle should be initialized', function() {
+  it('should be initialized', function() {
     expect(wiggle.on).toEqual(jasmine.any(Function));
     expect(wiggle.on.change).toEqual(jasmine.any(Function));
     expect(wiggle.off).toEqual(jasmine.any(Function));
     expect(wiggle.off.change).toEqual(jasmine.any(Function));
     expect(wiggle.is).toEqual(jasmine.any(Function));
+
+    expect(Object.isFrozen(wiggle)).toEqual(true);
   });
 
-  it('Wiggle should notify subscribers', function(done) {
-    wiggle.on('desktop', done);
-
+  it('should show correctly witch screen is active', function() {
     expect(wiggle.is('desktop')).toEqual(true);
     expect(wiggle.is('tablet')).toEqual(false);
     expect(wiggle.is('mobile')).toEqual(false);
     expect(wiggle.is('notExisting')).toEqual(false);
   });
 
-  it('wiggle property should be immutable', function() {
-    wiggle.is = 'changed is';
-    wiggle.on = 'changed on';
-
-    expect(wiggle.is).toEqual(jasmine.any(Function));
-    expect(wiggle.on).toEqual(jasmine.any(Function));
-  });
-
-  it('On/Off listeners should be executed on resize', function(done) {
+  it('should notify listeners on change', function() {
     var onDesktop = 0;
     var offDesktop = 0;
     var onTablet = 0;
@@ -87,58 +88,40 @@ describe('Wiggle', function() {
     expect(onMobile).toEqual(0);
     expect(offMobile).toEqual(1);
 
-    // Set mobile to be active screen and activate resize event
-    mockActiveScreen('mobile');
-    window.dispatchEvent(new Event('resize'));
+    // Execute mobile listeners
+    triggerScreenChange('mobile');
 
-    waitResize(function() {
-      expect(onDesktop).toEqual(1);
-      expect(offDesktop).toEqual(1);
-      expect(onTablet).toEqual(0);
-      expect(offTablet).toEqual(1);
-      expect(onMobile).toEqual(1);
-      expect(offMobile).toEqual(1);
-
-      done();
-    });
+    expect(onDesktop).toEqual(1);
+    expect(offDesktop).toEqual(1);
+    expect(onTablet).toEqual(0);
+    expect(offTablet).toEqual(1);
+    expect(onMobile).toEqual(1);
+    expect(offMobile).toEqual(1);
   });
 
-  it('on.change/off.change Listeners should be executed on resize', function(done) {
+  it('on.change/off.change Listeners should be executed on resize', function() {
     var onDesktop = 0;
     var offDesktop = 0;
 
     // Initial screen size is on desktop
-    wiggle.on.change('desktop', function() { onDesktop += 1; });
-    wiggle.off.change('desktop', function() { offDesktop += 1; });
+    wiggle.on.change('desktop', function() {
+      onDesktop += 1;
+    });
+    wiggle.off.change('desktop', function() {
+      offDesktop += 1;
+    });
 
     // Queue should not be triggered on first screen size
     expect(onDesktop).toEqual(0);
     expect(offDesktop).toEqual(0);
 
-    // Set mobile to be active screen and activate resize event
-    mockActiveScreen('mobile');
-    window.dispatchEvent(new Event('resize'));
 
-    waitResize(function() {
-      expect(onDesktop).toEqual(0);
-      expect(offDesktop).toEqual(1);
-      // Set desktop to be active screen and activate resize event
-      mockActiveScreen('desktop');
-      window.dispatchEvent(new Event('resize'));
+    triggerScreenChange('mobile');
+    expect(onDesktop).toEqual(0);
+    expect(offDesktop).toEqual(1);
 
-      waitResize(function() {
-        expect(onDesktop).toEqual(1);
-        expect(offDesktop).toEqual(1);
-
-        // No changes no listeners should be trigered
-        window.dispatchEvent(new Event('resize'));
-
-        waitResize(function() {
-          expect(onDesktop).toEqual(1);
-          expect(offDesktop).toEqual(1);
-          done();
-        });
-      });
-    });
+    triggerScreenChange('desktop');
+    expect(onDesktop).toEqual(1);
+    expect(offDesktop).toEqual(1);
   });
 });
