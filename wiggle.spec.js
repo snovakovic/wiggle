@@ -2,21 +2,22 @@ describe('Wiggle', () => {
   let wiggle;
   let listeners;
   let activeSize;
+  let activeOrientation;
+  let counter;
 
   // Mock match media
   window.matchMedia = function(query) {
     return {
       get matches() {
-        let size;
-        if (query.includes('992')) {
-          size = 'desktop'
-        } else if (query.includes('991')) {
-          size = 'tablet'
-        } else if (query.includes('767')) {
-          size = 'mobile'
-        }
+        const screen = [
+          { def: '992', value: 'desktop'},
+          { def: '991', value: 'tablet'},
+          { def: '767', value: 'mobile'},
+          { def: 'portrait', value: 'portrait'},
+          { def: 'landscape', value: 'landscape'},
+        ].find((q) => query.includes(q.def)).value;
 
-        return size === activeSize;
+        return screen === activeSize || screen === activeOrientation;
       },
       addListener: function(cb) {
         listeners.push(cb.bind(null, this));
@@ -34,6 +35,18 @@ describe('Wiggle', () => {
   beforeEach(() => {
     listeners = [];
     activeSize = 'desktop';
+    activeOrientation = 'landscape';
+
+    counter = {
+      onDesktop: 0,
+      offDesktop: 0,
+      onTablet: 0,
+      offTablet: 0,
+      onMobile: 0,
+      offMobile: 0,
+      onPortrait: 0,
+      onLandscape: 0
+    }
 
     wiggle = Wiggle.init([{
       minWidth: 992,
@@ -66,58 +79,77 @@ describe('Wiggle', () => {
   });
 
   it('should notify listeners on change', () => {
-    let onDesktop = 0;
-    let offDesktop = 0;
-    let onTablet = 0;
-    let offTablet = 0;
-    let onMobile = 0;
-    let offMobile = 0;
-
     // Initial screen size is on desktop
-    wiggle.on('desktop', () => onDesktop += 1);
-    wiggle.off('desktop', () => offDesktop += 1);
-    wiggle.on('tablet', () => onTablet += 1);
-    wiggle.off('tablet', () => offTablet += 1);
-    wiggle.on('mobile', () => onMobile += 1);
-    wiggle.off('mobile', () => offMobile += 1);
+    wiggle.on('desktop', () => counter.onDesktop += 1);
+    wiggle.off('desktop', () => counter.offDesktop += 1);
+    wiggle.on('tablet', () => counter.onTablet += 1);
+    wiggle.off('tablet', () => counter.offTablet += 1);
+    wiggle.on('mobile', () => counter.onMobile += 1);
+    wiggle.off('mobile', () => counter.offMobile += 1);
 
-    expect(onDesktop).toEqual(1);
-    expect(offDesktop).toEqual(0);
-    expect(onTablet).toEqual(0);
-    expect(offTablet).toEqual(1);
-    expect(onMobile).toEqual(0);
-    expect(offMobile).toEqual(1);
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.offDesktop).toEqual(0);
+    expect(counter.onTablet).toEqual(0);
+    expect(counter.offTablet).toEqual(1);
+    expect(counter.onMobile).toEqual(0);
+    expect(counter.offMobile).toEqual(1);
 
     // Execute mobile listeners
     triggerScreenChange('mobile');
 
-    expect(onDesktop).toEqual(1);
-    expect(offDesktop).toEqual(1);
-    expect(onTablet).toEqual(0);
-    expect(offTablet).toEqual(1);
-    expect(onMobile).toEqual(1);
-    expect(offMobile).toEqual(1);
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.offDesktop).toEqual(1);
+    expect(counter.onTablet).toEqual(0);
+    expect(counter.offTablet).toEqual(1);
+    expect(counter.onMobile).toEqual(1);
+    expect(counter.offMobile).toEqual(1);
   });
 
   it('on.change/off.change Listeners should be executed on resize', () => {
-    let onDesktop = 0;
-    let offDesktop = 0;
-
     // Initial screen size is on desktop
-    wiggle.on.change('desktop', () => onDesktop += 1);
-    wiggle.off.change('desktop', () => offDesktop += 1);
+    wiggle.on.change('desktop', () => counter.onDesktop += 1);
+    wiggle.off.change('desktop', () => counter.offDesktop += 1);
 
     // Queue should not be triggered on first screen size
-    expect(onDesktop).toEqual(0);
-    expect(offDesktop).toEqual(0);
-
+    expect(counter.onDesktop).toEqual(0);
+    expect(counter.offDesktop).toEqual(0);
 
     triggerScreenChange('mobile');
-    expect(onDesktop).toEqual(0);
-    expect(offDesktop).toEqual(1);
+
+    expect(counter.onDesktop).toEqual(0);
+    expect(counter.offDesktop).toEqual(1);
 
     triggerScreenChange('desktop');
-    expect(onDesktop).toEqual(1);
-    expect(offDesktop).toEqual(1);
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.offDesktop).toEqual(1);
+  });
+
+  it('multiple instances of wiggle should run in parallel', () => {
+    const orientation = Wiggle.init([{
+      name: 'portrait',
+      mediaQuery: '(orientation: portrait)'
+    }, {
+      name: 'landscape',
+      mediaQuery: '(orientation: landscape)'
+    }]);
+
+    wiggle.on('mobile', () => counter.onMobile += 1);
+    orientation.on('portrait', () => counter.onPortrait += 1);
+    orientation.on('landscape', () => counter.onLandscape += 1);
+
+    expect(wiggle.is('desktop')).toEqual(true);
+    expect(orientation.is('landscape')).toEqual(true);
+    expect(orientation.is('portrait')).toEqual(false);
+    expect(orientation.is('desktop')).toEqual(false);
+
+    expect(counter.onLandscape).toEqual(1); // default orientation
+    expect(counter.onPortrait).toEqual(0);
+    expect(counter.onMobile).toEqual(0);
+
+    triggerScreenChange('mobile');
+
+    expect(counter.onLandscape).toEqual(1);
+    expect(counter.onPortrait).toEqual(0);
+    expect(counter.onMobile).toEqual(1);
   });
 });
