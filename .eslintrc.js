@@ -2,7 +2,8 @@ module.exports = {
   extends: 'eslint:recommended',
   env: {
     browser: true,
-    jasmine: true
+    jasmine: true,
+    es6: true
   },
   globals: {
     module: true,

@@ -8,12 +8,27 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/babel-polyfill/dist/polyfill.js',
       'wiggle.js',
       'wiggle.spec.js'
     ],
 
     preprocessors: {
-      'src/app/*.js': ['coverage']
+      'wiggle.js': ['coverage'],
+      'wiggle.spec.js': ['babel']
+    },
+
+    babelPreprocessor: {
+      options: {
+        presets: ['es2015'],
+        sourceMap: 'inline'
+      },
+      filename: function (file) {
+        return file.originalPath.replace(/\.js$/, '.es5.js');
+      },
+      sourceFileName: function (file) {
+        return file.originalPath;
+      }
     },
 
     // test results reporter to use
