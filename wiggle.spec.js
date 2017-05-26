@@ -152,4 +152,14 @@ describe('Wiggle', () => {
     expect(counter.onPortrait).toEqual(0);
     expect(counter.onMobile).toEqual(1);
   });
+
+  it('should throw invalid configuration error', () => {
+    const errMsg = 'Wiggle: Configuration is invalid. Go to https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
+
+    expect(Wiggle.init).toThrow(new Error(errMsg));
+    expect(() => Wiggle.init([])).toThrow(new Error(errMsg));
+    expect(() => Wiggle.init([{}])).toThrow(new Error(errMsg));
+    expect(() => Wiggle.init([{ name: 'ala' }])).toThrow(new Error(errMsg));
+    expect(() => Wiggle.init([{ mediaQuery: 'test' }])).toThrow(new Error(errMsg));
+  });
 });

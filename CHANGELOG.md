@@ -1,3 +1,7 @@
+## [1.2.0] - 2017-05-26
+### Changed
+- Validation for wiggle configuration
+
 ## [1.1.0] - 2017-05-21
 ### Changed
 - remove window resize listener and use match media listener

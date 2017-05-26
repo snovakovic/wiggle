@@ -1,7 +1,7 @@
 /*****************************************************
 	  https://github.com/snovakovic/wiggle
     author: stefan.novakovich@gmail.com
-    version: 1.1.4
+    version: 1.2.0
  ***************************************************/
 (function(global, factory) {
   // UMD pattern
@@ -124,20 +124,15 @@
 
   return {
     init: function(screens) {
-      var readme = 'Check readme file at https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
+      var valid = Array.isArray(screens) && screens.length &&
+        screens.every(function(screen) {
+          return typeof screen === 'object' && screen.name &&
+          (screen.mediaQuery || screen.minWidth || screen.maxWidth)
+        });
 
-      if (!screens || !Array.isArray(screens)) {
-        throw Error('Wiggle: Missing required screens array configuration. ' + readme);
+      if(!valid) {
+        throw Error('Wiggle: Configuration is invalid. Go to https://github.com/snovakovic/wiggle for more info about configuring wiggle.');
       }
-
-      screens.forEach(function(screen) {
-        if (typeof screen !== 'object' || !screen.name
-          || (!(screen.mediaQuery || screen.minWidth || screen.maxWidth))) {
-          throw Error('Wiggle: Invalid screens configuration. ' + readme);
-        }
-      });
-
-      // Instantiate wiggle
 
       return new Instance(screens);
     }
