@@ -1,6 +1,6 @@
 # wiggle
 
-[![NPM Package](https://nodei.co/npm/js-flock.png)](https://www.npmjs.com/package/js-flock)
+[![NPM Package](https://nodei.co/npm/wiggle.png)](https://www.npmjs.com/package/wiggle)
 
 Small wrapper around [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
 to easily react on changes in page layout. Define your own breakpoints in layout and react to them from JavaScript code.
