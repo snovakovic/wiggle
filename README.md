@@ -1,9 +1,10 @@
 # wiggle
 
-Small wrapper around [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
-to easily react on changes in page layout.
+[![NPM Package](https://nodei.co/npm/js-flock.png)](https://www.npmjs.com/package/js-flock)
 
-npm install wiggle.js --save
+Small wrapper around [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
+to easily react on changes in page layout. Define your own breakpoints in layout and react to them from JavaScript code.
+
 
 ```javascript
   /**

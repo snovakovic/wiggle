@@ -1,6 +1,6 @@
 {
   "name": "wiggle.js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Media Queries Change Listener",
   "main": "wiggle.js",
   "repository": {
@@ -12,7 +12,8 @@
     "Media Queries",
     "matchMedia",
     "responsive",
-    "resize"
+    "resize",
+    "breakpoints"
   ],
   "author": "stefan.novakovich@gmail.com",
   "license": "MIT",
