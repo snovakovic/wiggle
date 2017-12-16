@@ -124,6 +124,43 @@ describe('Wiggle', () => {
     expect(counter.offDesktop).toEqual(1);
   });
 
+  it('Should unsubscribe', () => {
+    // Initial screen size is on desktop
+    const desktop = () => counter.onDesktop += 1;
+    const mobile1 = () => counter.onMobile += 1;
+    const mobile2 = () => counter.onMobile += 1;
+
+    wiggle.on('desktop', desktop);
+    wiggle.on('mobile', mobile1);
+    wiggle.on('mobile', mobile2);
+
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.onMobile).toEqual(0);
+
+    triggerScreenChange('mobile');
+
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.onMobile).toEqual(2);
+
+    // Unsubscribe
+    wiggle.unsubscribe(desktop);
+    wiggle.unsubscribe(mobile1);
+
+    triggerScreenChange('desktop');
+    triggerScreenChange('mobile');
+
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.onMobile).toEqual(3);
+
+    wiggle.unsubscribe(mobile2);
+
+    triggerScreenChange('desktop');
+    triggerScreenChange('mobile');
+
+    expect(counter.onDesktop).toEqual(1);
+    expect(counter.onMobile).toEqual(3);
+  });
+
   it('multiple instances of wiggle should run in parallel', () => {
     const orientation = Wiggle.init([{
       name: 'portrait',
@@ -154,7 +191,7 @@ describe('Wiggle', () => {
   });
 
   it('should throw invalid configuration error', () => {
-    const errMsg = 'Wiggle: Configuration is invalid. Go to https://github.com/snovakovic/wiggle for more info about configuring wiggle.';
+    const errMsg = 'Wiggle: Configuration is invalid. For examples of an configuration reference https://github.com/snovakovic/wiggle.';
 
     expect(Wiggle.init).toThrow(new Error(errMsg));
     expect(() => Wiggle.init([])).toThrow(new Error(errMsg));
