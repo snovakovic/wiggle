@@ -82,7 +82,7 @@ to easily react on changes in page layout. Define your own layout breakpoints an
     console.log('Listener will be active until we unsubscribe from it');
   }
 
-  orientation.on(landscape, landscapeListener);
+  orientation.on('landscape', landscapeListener);
 
   onSomeEvent(function() {
     // Remove landscapeListener subscription.
