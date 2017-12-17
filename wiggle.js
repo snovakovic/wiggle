@@ -81,7 +81,7 @@
 
     function deactivateScreen(screen) {
       if (activeScreens[screen.name]) {
-        delete activeScreens[screen.name];
+        activeScreens[screen.name] = undefined;
         notifySubscribers(screen.name, subscribeType.off);
       }
     }
@@ -119,6 +119,17 @@
       return Boolean(activeScreens[name]);
     };
 
+    this.unsubscribe = function(cb) {
+      Object.keys(subscribers).forEach(function(type){
+        Object.keys(subscribers[type]).forEach(function(name) {
+          subscribers[type][name] = subscribers[type][name]
+            .filter(function(subscription) {
+              return subscription.execute !== cb;
+            })
+        });
+      });
+    }
+
     Object.freeze(this);
   }
 
@@ -131,7 +142,7 @@
         });
 
       if(!valid) {
-        throw Error('Wiggle: Configuration is invalid. Go to https://github.com/snovakovic/wiggle for more info about configuring wiggle.');
+        throw Error('Wiggle: Configuration is invalid. For examples of an configuration reference https://github.com/snovakovic/wiggle.');
       }
 
       return new Instance(screens);
