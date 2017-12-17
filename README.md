@@ -3,19 +3,18 @@
 [![NPM Package](https://nodei.co/npm/wiggle.js.png)](https://www.npmjs.com/package/wiggle.js)
 
 Small wrapper around [matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
-to easily react on changes in page layout.
-Wiggle is breakpoint agnostic, define your own breakpoints and react to them.
+to easily react on changes in page layout. Define your own layout breakpoints and attach listeners to them.
 
 
 ```javascript
 
   /**
-  * In order to use wiggle we need to initialize it.
-  * Init returns new wiggle instance that allow us to subscribe to defined rules.
+  * In order to use wiggle we need to initialize it first.
+  * Listeners are attached on wiggle instance.
   **/
   Wiggle.init([{
-    name:String // Need to be unique for the instance. It can be any valid object property name.
-    minWidth:String|Number // Any valid media-query value as a string fro maximumWidth. If number wiggle assumes measurement unit is in px.
+    name:String // Need to be unique per the instance. It can be any string that is valid object property name.
+    minWidth:String|Number // If number wiggle assumes measurement unit is in px. If string any valid CSS measurement unit can be defined instead of px (like em).
     minWidth:String|Number
     mediaQuery:String // Raw media query. item can have ether minWidth, maxWidth combination or rawQuery but not both.
   }])
@@ -24,11 +23,11 @@ Wiggle is breakpoint agnostic, define your own breakpoints and react to them.
 
   var screen = Wiggle.init([{
       // Screen width >= 992px is defined as a desktop.
-      name: 'desktop', // The name is arbitrary and can be anything as 'large-screen'
+      name: 'desktop', // The name is arbitrary and can be anything e.g 'large-screen'
       minWidth: 992
     }, {
       name: 'desktop-menu',
-      minWidth: '820px' // same as writing 820 as number default to px unit
+      minWidth: '820px' // same as writing 820 because number default to px unit
     }, {
       // Tablet have overlaps with menu-breakpoint.
       name: 'tablet',
@@ -41,21 +40,17 @@ Wiggle is breakpoint agnostic, define your own breakpoints and react to them.
 
   // We are subscribing to names defined during initialization of wiggle.
   screen.on('mobile', function() {
-    console.log('Called if screen size is mobile and ever time after screen becomes mobile');
+    console.log('Called if screen size is mobile and ever time after screen size changes to mobile');
   });
 
   // Difference between .on and .on.change listener is that .on listener will be triggered
   // immediately when defined if condition is meet while on.change will be triggered only after change happen.
   screen.on.change('mobile', function() {
-    console.log('Called every time after screen becomes mobile');
-  });
-
-  screen.on('desktop', function() {
-    console.log('Called if screen size is desktop and ever time after screen becomes desktop');
+    console.log('Called every time after screen size changes to mobile');
   });
 
   screen.off('tablet', function() {
-    console.log('Called if screen size is not tablet and ever time after screen stops being tablet');
+    console.log('Called if screen size is not tablet and ever time after screen size stops being tablet');
   });
 
   if(screen.is('desktop')) {
@@ -63,7 +58,7 @@ Wiggle is breakpoint agnostic, define your own breakpoints and react to them.
   }
 
   if(screen.is('tablet') && screen.is('desktop-menu')) {
-    console.log('Based on configuration multiple screens can be active at the single time.')
+    console.log('Based on configuration multiple screens can be active.')
   }
 
   // Multiple instances of wiggle can be created
@@ -76,7 +71,7 @@ Wiggle is breakpoint agnostic, define your own breakpoints and react to them.
   }]);
 
   orientation.on('portrait', function() {
-    console.log('Called if screen is in portrait mode and every time screen switches to portrait mode');
+    console.log('Called if screen is in portrait mode and every time screen changes to portrait mode');
   });
 ```
 
