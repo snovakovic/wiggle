@@ -120,7 +120,7 @@
     };
 
     this.unsubscribe = function(cb) {
-      Object.keys(subscribers).forEach(function(type){
+      Object.keys(subscribers).forEach(function(type) {
         Object.keys(subscribers[type]).forEach(function(name) {
           subscribers[type][name] = subscribers[type][name]
             .filter(function(subscription) {
