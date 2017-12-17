@@ -24,10 +24,10 @@ to easily react on changes in page layout. Define your own layout breakpoints an
   var screen = Wiggle.init([{
       // Screen width >= 992px is defined as a desktop.
       name: 'desktop', // The name is arbitrary and can be anything e.g 'large-screen'
-      minWidth: 992
+      minWidth: 992 // same as writing '992px' because number default to px unit
     }, {
       name: 'desktop-menu',
-      minWidth: '820px' // same as writing 820 because number default to px unit
+      minWidth: '820px'
     }, {
       // Tablet have overlaps with menu-breakpoint.
       name: 'tablet',
