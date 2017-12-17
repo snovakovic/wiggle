@@ -164,10 +164,10 @@ describe('Wiggle', () => {
   it('multiple instances of wiggle should run in parallel', () => {
     const orientation = Wiggle.init([{
       name: 'portrait',
-      mediaQuery: '(orientation: portrait)'
+      mediaQuery: 'orientation: portrait'
     }, {
       name: 'landscape',
-      mediaQuery: '(orientation: landscape)'
+      mediaQuery: 'orientation: landscape'
     }]);
 
     wiggle.on('mobile', () => counter.onMobile += 1);
