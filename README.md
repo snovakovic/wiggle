@@ -73,6 +73,21 @@ to easily react on changes in page layout. Define your own layout breakpoints an
   orientation.on('portrait', function() {
     console.log('Called if screen is in portrait mode and every time screen changes to portrait mode');
   });
+
+
+  // Unsubscribe
+
+  // In order to unsubscribe we have to have reference to function used to subscribe to event.
+  function landscapeListener() {
+    console.log('Listener will be active until we unsubscribe from it');
+  }
+
+  orientation.on(landscape, landscapeListener);
+
+  onSomeEvent(function() {
+    // Remove landscapeListener subscription.
+    orientation.unsubscribe(landscapeListener);
+  });
 ```
 
 
